@@ -1,0 +1,10 @@
+POST http://localhost:3303/cars
+Content-Type: application/json
+
+{
+    "carId" : "3",
+    "carInfo" : "共三小"
+}
+
+###
+GET http://192.168.2.155:3303/cars

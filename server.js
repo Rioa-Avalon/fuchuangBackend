@@ -1,12 +1,15 @@
 require('dotenv').config()
 
-const { json } = require('body-parser');
 const express = require('express')
 const app = express()
 
+//mongodb
 const mongoose = require('mongoose')
 mongoose.connect(process.env.DATABASE_URL)
 const db = mongoose.connection
+db.on('error', console.error.bind(console, 'connection error:'))
+db.on('open', () => console.log('connected to mongoDB'))
+
 
 // WebSocket
 // const WebSocketServer = require('ws').Server,
@@ -21,7 +24,11 @@ const db = mongoose.connection
 //     });
 // })
 
+// routes
+const carRouter = require('./routers/car_router')
 app.use(express.json())
+app.use('/cars', carRouter)
+
 
 app.listen(3303, () => {
     console.log("Express Server connected!");
