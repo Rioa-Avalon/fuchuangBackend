@@ -12,10 +12,14 @@ router.get('/', (req, res) => {
 
 // POST /car
 router.post('/', async (req, res) => {
-
+    // if (req.body.carId.lenght != 7) {
+    //     return res.status(400).json({error: "Bad Request!"})
+    // }
     const car = new Car()
-    car.carId = req.body.carId
-    car.carInfo = req.body.carInfo
+    car.stat = req.body.stat
+    car.id = req.body.id
+    car.carNum = req.body.carNum
+    car.points = req.body.points
 
     try {
         const newCar = await car.save()
