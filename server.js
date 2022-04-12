@@ -3,6 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const { json } = require('express/lib/response')
 const app = express()
+const enableWs = require('express-ws')
 const Car = require('./models/cars')
 
 //mongodb
@@ -14,8 +15,46 @@ db.on('open', () => console.log('connected to mongoDB'))
 
 
 //WebSocket
+enableWs(app)
+app.ws('/ws/screenshots', (ws, req) => {
+    ws.on('message', (msg) => {
+        console.log(msg)
+        ws.send(msg)
+    })
+})
+
+app.ws('/ws/cars', (ws) => {
+    let cars = []
+    var carJson
+    ws.on('message', (msg) => {
+        ws.clients.forEach(function each(client) {
+            client.send(`${msg}`)
+        })
+        console.log('Received: %s', message);
+        //save every 10 messages into monogoDB
+        carJson = JSON.parse(message)
+        cars.push(carJson)
+
+        console.log(cars.length);
+        //if cars.length > 10, save cars to monogoDB
+        if (cars.length == 10) {
+            // console.log(cars)
+            Car.insertMany(cars, (err) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    console.log('inserted')
+                }
+            })
+            cars = []
+        }
+    })
+})
+
 const WebSocketServer = require('ws').Server,
-    wss = new WebSocketServer({ port: 3304})
+    wss = new WebSocketServer({ 
+        port: 3304
+    })
     let cars = []
     var carJson
     wss.on('connection', function (ws) {
