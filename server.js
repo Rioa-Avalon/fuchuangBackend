@@ -16,13 +16,11 @@ db.on('open', () => console.log('connected to mongoDB'))
 
 //WebSocket
 enableWs(app)
+var aWss = enableWs(app).getWss('/ws')
 app.ws('/ws', (ws) => {
     let cars = []
     var carJson
     ws.on('message', (message) => {
-        console.log('Received: %s', message);
-        //send message to all clients
-        ws.send(message)
         //regocnize difference messages 
         if (message.includes('carId')) {
             console.log('cars');
@@ -43,11 +41,18 @@ app.ws('/ws', (ws) => {
                 })
                 cars = []
             }
+        } else if (message.includes('type')) {
+            console.log('roadType');
         } else {
             console.log('points');
         }
 
-        
+        console.log('Received: %s', message);
+        //send message to all clients
+        aWss.clients.forEach(function each(client) {
+            client.send(message)
+        }
+        )
     })
 })
 
@@ -87,6 +92,7 @@ app.ws('/ws', (ws) => {
 
 // routes
 const carRouter = require('./routers/car_router')
+const expressWs = require('express-ws')
 app.use(express.json())
 app.use('/cars', carRouter)
 
