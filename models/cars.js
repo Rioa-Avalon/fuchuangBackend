@@ -4,7 +4,7 @@ const carSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    id: {
+    carId: {
         type: String,
         required: true
     },

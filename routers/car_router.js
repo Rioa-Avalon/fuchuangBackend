@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
     // }
     const car = new Car()
     car.stat = req.body.stat
-    car.id = req.body.id
+    car.carId = req.body.carId
     car.carNum = req.body.carNum
     car.points = req.body.points
 
