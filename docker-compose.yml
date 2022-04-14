@@ -1,0 +1,25 @@
+version: '3'
+services:
+  traffic_backend:
+    container_name: traffic_backend
+    image: traffic_image
+    build: .
+    restart: always
+    ports:
+      - "3303:8080"
+    links:
+      - mongodb
+
+
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    build: .
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./data:/data/mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_DATABASE=traffic
