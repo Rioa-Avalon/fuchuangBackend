@@ -10,24 +10,35 @@ router.get('/', (req, res) => {
     })
 })
 
-// POST /car
-router.post('/', async (req, res) => {
-    // if (req.body.carId.lenght != 7) {
-    //     return res.status(400).json({error: "Bad Request!"})
-    // }
-    const car = new Car()
-    car.stat = req.body.stat
-    car.carId = req.body.carId
-    car.carNum = req.body.carNum
-    car.points = req.body.points
-
+// GET /new 50 cars
+router.get('/new50', async (req, res) => {
     try {
-        const newCar = await car.save()
-        res.status(201).json(newCar)
+        const cars = await Car.find().limit(50).sort({_id: -1})
+        res.send(cars)
     } catch (error) {
-        res.status(500).json({ error: 'database failure' })
+        res.status(500).json({Error: error.message})
     }
 })
+
+
+// POST /car
+// router.post('/', async (req, res) => {
+//     // if (req.body.carId.lenght != 7) {
+//     //     return res.status(400).json({error: "Bad Request!"})
+//     // }
+//     const car = new Car()
+//     car.stat = req.body.stat
+//     car.carId = req.body.carId
+//     car.carNum = req.body.carNum
+//     car.points = req.body.points
+
+//     try {
+//         const newCar = await car.save()
+//         res.status(201).json(newCar)
+//     } catch (error) {
+//         res.status(500).json({ error: 'database failure' })
+//     }
+// })
 
 
 

@@ -10,3 +10,6 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3303/cars
+
+###
+GET http://localhost:3303/cars/new50
