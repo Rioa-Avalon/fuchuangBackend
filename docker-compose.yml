@@ -9,17 +9,14 @@ services:
       - "3303:8080"
     links:
       - mongodb
+    environment:
+    - DATABASE_URL=mongodb://mongodb:27017/traffic
 
 
   mongodb:
     container_name: mongodb
-    image: mongo
-    build: .
+    image: mongo:3.6
     ports:
       - "27018:27017"
     volumes:
       - ./data:/data/mongodb
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=root
-      - MONGO_INITDB_DATABASE=traffic

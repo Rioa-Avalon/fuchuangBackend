@@ -1,4 +1,4 @@
-POST http://localhost:3303/cars
+POST http://localhost:8080/cars
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3303/cars
+GET http://localhost:8080/cars
 
 ###
-GET http://localhost:3303/cars/new50
+GET http://localhost:8080/cars/new50

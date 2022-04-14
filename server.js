@@ -58,11 +58,10 @@ app.ws('/ws', (ws) => {
 
 // routes
 const carRouter = require('./routers/car_router')
-const expressWs = require('express-ws')
 app.use(express.json())
 app.use('/cars', carRouter)
 
 
-app.listen(3303, () => {
+app.listen(8080, () => {
     console.log("Express Server connected!");
 })
