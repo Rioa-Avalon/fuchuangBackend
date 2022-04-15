@@ -17,11 +17,11 @@ const ImageSchema = new mongoose.Schema({
         default: Date.now,
         require: true
     },
-
-    carId: [{
+    //ref to car
+    carId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Car'
-    }]
+    }
 })
 
-module.exports = mongoose.module('Image', ImageSchema)
+module.exports = mongoose.model('Image', ImageSchema)

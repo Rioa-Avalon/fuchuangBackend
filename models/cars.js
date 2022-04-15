@@ -10,8 +10,7 @@ const carSchema = new mongoose.Schema({
     },
     carNum: {
         type: String,
-        //maxlength: 12,
-        //minlength: 12,
+        unique: true,
         required: true
     },
     points: {

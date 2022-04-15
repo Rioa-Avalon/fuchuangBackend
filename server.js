@@ -21,7 +21,6 @@ var aWss = enableWs(app).getWss('/ws')
 app.ws('/ws', (ws) => {
     let cars = []
     let carJson
-    let images = []
     let imageJson
     ws.on('message', (message) => {
         //regocnize difference messages 
@@ -46,13 +45,29 @@ app.ws('/ws', (ws) => {
             }
         } else if (message.includes('prgb')) {
             console.log('image');
-            imageJson = JSON.parse(message)
-            //save image to monogoDB
-            Image.create(imageJson, (err) => {
+            let imageJson = JSON.parse(message)
+            const carNum = imageJson.carNum
+            console.log(carNum);
+            let carId 
+            //find Car.carId by carNum
+            Car.findOne({ carNum: carNum }, (err, car) => {
                 if (err) {
                     console.log(err)
                 }
+                carId = car._id
+                imageJson.carId = carId
+                //save image to monogoDB
+                Image.create(imageJson, (err) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        console.log('image inserted')
+                        console.log(imageJson);
+                    }
+                })
             })
+
+            
         } else if (message.includes('rtype')) {
             console.log('roadType');
         } else {
