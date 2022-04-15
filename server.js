@@ -5,6 +5,7 @@ const { json } = require('express/lib/response')
 const app = express()
 const enableWs = require('express-ws')
 const Car = require('./models/cars')
+const Image = require('./models/images')
 
 //mongodb
 const mongoose = require('mongoose')
@@ -19,7 +20,9 @@ enableWs(app)
 var aWss = enableWs(app).getWss('/ws')
 app.ws('/ws', (ws) => {
     let cars = []
-    var carJson
+    let carJson
+    let images = []
+    let imageJson
     ws.on('message', (message) => {
         //regocnize difference messages 
         if (message.includes('carId')) {
@@ -41,7 +44,16 @@ app.ws('/ws', (ws) => {
                 })
                 cars = []
             }
-        } else if (message.includes('type')) {
+        } else if (message.includes('prgb')) {
+            console.log('image');
+            imageJson = JSON.parse(message)
+            //save image to monogoDB
+            Image.create(imageJson, (err) => {
+                if (err) {
+                    console.log(err)
+                }
+            })
+        } else if (message.includes('rtype')) {
             console.log('roadType');
         } else {
             console.log('points');
