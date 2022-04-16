@@ -21,6 +21,11 @@ const carSchema = new mongoose.Schema({
         type: Date,
         require: true,
         default: Date.now
+    },
+    //combind upload file with car data
+    image: {
+        type: String,
+        required: true
     }
 })
 

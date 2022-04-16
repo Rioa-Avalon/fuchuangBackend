@@ -6,13 +6,35 @@ const app = express()
 const enableWs = require('express-ws')
 const Car = require('./models/cars')
 const Image = require('./models/images')
-
-//mongodb
+const upload = require('./routers/upload')
+const Grid = require('gridfs-stream')
 const mongoose = require('mongoose')
-mongoose.connect(process.env.DATABASE_URL)
-const db = mongoose.connection
-db.on('error', console.error.bind(console, 'connection error:'))
-db.on('open', () => console.log('connected to mongoDB'))
+
+//gridfs storage and monogodb
+
+const connectionParams = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+};
+
+
+const conn = mongoose.createConnection(process.env.DATABASE_URL, connectionParams)
+
+//init gfs
+let gfs, gridfsBucket;
+
+conn.on('error', console.error.bind(console, 'connection error:'))
+conn.once('open', () => {
+    gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
+        bucketName: 'images'
+    });
+
+    gfs = Grid(conn.db, mongoose.mongo)
+    gfs.collection("images")
+    console.log('connected to mongoDB')
+})
+
+
 
 
 //WebSocket
@@ -85,8 +107,57 @@ app.ws('/ws', (ws) => {
 
 // routes
 const carRouter = require('./routers/car_router')
+const imageRouter = require('./routers/upload')
 app.use(express.json())
-app.use('/cars', carRouter)
+app.use('/api/car', carRouter)
+app.use('/api/image', imageRouter)
+
+// @route  GET /api/image/:filename
+// @desc   Get image
+app.get("/api/image/:filename", async (req, res) => {
+    try {
+        const file = await gfs.files.findOne({ filename: req.params.filename })
+        if (!file || file.length === 0) {
+            return res.status(404).json({
+                err: 'No file exists'
+            })
+        } else {
+        const readstream = gridfsBucket.openDownloadStream(file._id)
+        readstream.pipe(res)
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Server Error")
+    }
+})
+
+// @route DELETE /api/image/:filename
+// @desc  Delete image
+app.delete("/api/image/:filename", async (req, res) => {
+    try {
+        const file = await gfs.files.findOne({ filename: req.params.filename })
+        if (!file || file.length === 0) {
+            return res.status(404).json({
+                err: 'No file exists'
+            })
+        } else {
+            await await gfs.files.deleteOne({ filename: req.params.filename }, (err) => {
+                if (err) {
+                    return res.status(404).json({
+                        message: err.message
+                    })
+                }
+                res.json({
+                    msg: 'File deleted'
+                })
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Server Error")
+    }
+})
+
 
 
 app.listen(8080, () => {
