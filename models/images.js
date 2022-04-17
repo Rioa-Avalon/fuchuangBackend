@@ -4,10 +4,6 @@ const ImageSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    prgb: {
-        type: String,
-        require: true
-    },
     pinfo: {
         type: String,
         default: ""

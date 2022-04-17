@@ -30,11 +30,12 @@ router.get('/images', async (req, res) => {
 })
 
 
-router.get('/find/:id', async (req, res) => {
+router.get('/find/:carNum', async (req, res) => {
     try {
         console.log(req.params.id);
-        const image = await Image.find({carId: req.params.id})
-        res.json(image)
+        const image = await Car.find({carId: req.params.carNum}).carImage
+        res.send(image)
+        // res.json(image)
     } catch (error) {
         res.status(500).json({Error: error.message})
     }

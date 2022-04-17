@@ -54,7 +54,7 @@ app.ws('/ws', (ws) => {
 
             console.log(cars.length);
             //if cars.length > 10, save cars to monogoDB
-            if (cars.length == 10) {
+            if (cars.length == 1) {
                 // console.log(cars)
                 Car.insertMany(cars, (err) => {
                     if (err) {
@@ -96,7 +96,7 @@ app.ws('/ws', (ws) => {
             console.log('points');
         }
 
-        console.log('Received: %s', message);
+        // console.log('Received: %s', message);
         //send message to all clients
         aWss.clients.forEach(function each(client) {
             client.send(message)

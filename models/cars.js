@@ -22,11 +22,11 @@ const carSchema = new mongoose.Schema({
         require: true,
         default: Date.now
     },
-    //combind upload file with car data
-    image: {
+    //save buffer image
+    carImage: {
         type: String,
         required: true
     }
-})
+}) 
 
 module.exports = mongoose.model('Car', carSchema);
