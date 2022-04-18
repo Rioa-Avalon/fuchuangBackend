@@ -15,4 +15,4 @@ GET http://localhost:8080/cars/find/62596e8e12347ae3e5ddc7c1
 GET http://localhost:8080/cars/new50
 
 ###
-GET http://localhost:8080/cars/images
+GET http://localhost:8080/cars/

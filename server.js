@@ -40,10 +40,9 @@ conn.once('open', () => {
 //WebSocket
 enableWs(app)
 var aWss = enableWs(app).getWss('/ws')
+let cars = []
+let carJson
 app.ws('/ws', (ws) => {
-    let cars = []
-    let carJson
-    let imageJson
     ws.on('message', (message) => {
         //regocnize difference messages 
         if (message.includes('carId')) {
@@ -52,9 +51,10 @@ app.ws('/ws', (ws) => {
             carJson = JSON.parse(message)
             cars.push(carJson)
 
+
             console.log(cars.length);
             //if cars.length > 10, save cars to monogoDB
-            if (cars.length == 1) {
+            if (cars.length == 3) {
                 // console.log(cars)
                 Car.insertMany(cars, (err) => {
                     if (err) {
@@ -107,7 +107,7 @@ app.ws('/ws', (ws) => {
 
 // routes
 const carRouter = require('./routers/car_router')
-const imageRouter = require('./routers/upload')
+const { log } = require('console')
 app.use(express.json())
 app.use('/api/car', carRouter)
 app.use('/api/image', imageRouter)

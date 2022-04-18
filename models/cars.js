@@ -10,22 +10,19 @@ const carSchema = new mongoose.Schema({
     },
     carNum: {
         type: String,
-        unique: true,
         required: true
     },
     points: {
         type: String,
         required: true
     },
-    carDate: {
+    carTime: {
         type: Date,
         require: true,
         default: Date.now
     },
-    //save buffer image
-    carImage: {
-        type: String,
-        required: true
+    img: {
+        type: Object
     }
 }) 
 
